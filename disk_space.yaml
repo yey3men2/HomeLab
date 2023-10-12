@@ -7,7 +7,7 @@
         server_name: "{{ ansible_hostname }}"
 
     - name: Check disk usage
-      shell: df -hP / | awk 'NR==2{print $5}' | cut-d'%' -f1
+      shell: df -hP / | awk 'NR==2{print $5}' | cut -d '%' -f1
       register: disk_usage
       changed_when: false
 
