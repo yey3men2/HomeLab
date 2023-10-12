@@ -12,7 +12,7 @@
       changed_when: false
 
     - name: Send Discord notification if disk usage is high
-      when: disk_usage.stdout|int >= 80
+      when: disk_usage.stdout|int >= 50
       uri:
         url: https://discord.com/api/webhooks/1090628082051842089/qCjPNPOJJnfpaby1hLmZAnpSz19JvpsglHCOUPKBngvh6Pcpeg_v-qx10oqNlgKhdlAe
         method: POST
