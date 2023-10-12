@@ -5,7 +5,7 @@
   tasks:
     - name: Stop AdGuard Home service
       systemd:
-        name: adguardhome
+        name: AdGuardHome
         state: stopped
       ignore_errors: yes
 
@@ -31,11 +31,11 @@
 
     - name: Start AdGuard Home service
       systemd:
-        name: adguardhome
+        name: AdGuardHome
         state: started
 
   handlers:
     - name: Restart AdGuard Home service
       systemd:
-        name: adguardhome
+        name: AdGuardHome
         state: restarted
