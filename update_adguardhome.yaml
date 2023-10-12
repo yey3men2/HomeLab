@@ -1,6 +1,6 @@
 ---
 - name: Update AdGuard Home
-  hosts: adguardcts
+  hosts: all
   become: yes
   tasks:
     - name: Stop AdGuard Home service
