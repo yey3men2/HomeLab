@@ -17,13 +17,13 @@
     - name: Extract the AdGuard Home binary
       ansible.builtin.unarchive:
         src: /tmp/adguardhome_latest.tar.gz
-        dest: /usr/local/bin
+        dest: /opt
         remote_src: yes
         extra_opts: [--strip-components=1]
 
     - name: Ensure AdGuard Home is executable
       ansible.builtin.file:
-        path: /usr/local/bin/AdGuardHome
+        path: /opt/AdGuardHome
         mode: 'u+x,g+x'
 
     - name: Start AdGuard Home service
