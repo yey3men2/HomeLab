@@ -1,0 +1,17 @@
+---
+- hosts: your_server
+  gather_facts: yes
+  tasks:
+    - name: Check disk usage
+      command: df -hP / | tail -n 1 | awk '{print $5}' | cut -d'%' -f1
+      register: disk_usage
+      changed_when: false
+
+    - name: Send Discord notification if disk usage is high
+      when: disk_usage.stdout|int >= 80
+      uri:
+        url: https://discord.com/api/webhooks/YOUR_DISCORD_WEBHOOK_URL
+        method: POST
+        body_format: json
+        body: '{"content": "Server disk usage is at {{ disk_usage.stdout }}%"}'
+      delegate_to: localhost
