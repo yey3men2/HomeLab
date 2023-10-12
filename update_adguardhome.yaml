@@ -3,17 +3,16 @@
   hosts: all
   become: yes
   tasks:
+    - name: Download the latest AdGuard Home binary
+      get_url:
+        url: https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz
+        dest: /tmp/adguardhome_latest.tar.gz
+
     - name: Stop AdGuard Home service
       systemd:
         name: AdGuardHome
         state: stopped
       ignore_errors: yes
-
-    - name: Download the latest AdGuard Home binary
-      get_url:
-        url: https://static.adguard.com/adguardhome/release/AdGuardHome_linux_amd64.tar.gz
-        dest: /tmp/adguardhome_latest.tar.gz
-      register: download_result
 
     - name: Extract the AdGuard Home binary
       ansible.builtin.unarchive:
@@ -21,21 +20,13 @@
         dest: /usr/local/bin
         remote_src: yes
         extra_opts: [--strip-components=1]
-      when: download_result.changed
 
     - name: Ensure AdGuard Home is executable
       ansible.builtin.file:
         path: /usr/local/bin/AdGuardHome
         mode: 'u+x,g+x'
-      when: download_result.changed
 
     - name: Start AdGuard Home service
       systemd:
         name: AdGuardHome
         state: started
-
-  handlers:
-    - name: Restart AdGuard Home service
-      systemd:
-        name: AdGuardHome
-        state: restarted
