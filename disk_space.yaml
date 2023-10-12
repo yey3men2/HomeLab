@@ -1,5 +1,5 @@
 ---
-- hosts: your_server
+- hosts: all
   gather_facts: yes
   tasks:
     - name: Check disk usage
