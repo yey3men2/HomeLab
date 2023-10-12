@@ -20,3 +20,4 @@
         body: '{"content": "Server {{ server_name }} - disk usage is at {{ disk_usage.stdout }}%"}'
       delegate_to: localhost
       ignore_errors: yes
+
