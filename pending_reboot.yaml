@@ -13,7 +13,7 @@
       ignore_errors: yes
 
     - name: Send Discord Notification if Reboot Required
-      when: reboot_check.stdout is not search("Reboot is required")
+      when: "not reboot_check.stdout is search('Reboot is required')"
       uri:
         url: https://discord.com/api/webhooks/1090628082051842089/qCjPNPOJJnfpaby1hLmZAnpSz19JvpsglHCOUPKBngvh6Pcpeg_v-qx10oqNlgKhdlAe
         method: POST
