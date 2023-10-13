@@ -1,0 +1,21 @@
+---
+- name: Check Pending Reboot and Notify on Discord
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Check if a reboot is required
+      command: "needs-restarting -r"
+      register: reboot_check
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Send Discord Notification if Reboot Required
+      when: reboot_check.stdout is not search("Reboot is required")
+      uri:
+        url: YOUR_DISCORD_WEBHOOK_URL
+        method: POST
+        body: '{"content":"{{ inventory_hostname }} requires a reboot."}'
+        body_format: json
+        status_code: 204
+      delegate_to: localhost
