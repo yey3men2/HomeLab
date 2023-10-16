@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  gather_facts: true  # Enable gathering facts, even on failure
+  gather_facts: true
   become: true
   tasks:
     - name: Update apt packages
@@ -8,15 +8,16 @@
         upgrade: yes
         update_cache: yes
 
-    - name: Capture facts gathering result
-      meta: end_play
-      when: ansible_facts.failed
-
-- hosts: localhost  # Use localhost for sending the Discord notification
+    - name: Capture facts gathering status
+      set_fact:
+        facts_gathering_failed: "{{ true }}"
+      when: ansible_facts == {}
+      
+- hosts: localhost
   tasks:
     - name: Send Discord notification
       slack:
         token: https://discord.com/api/webhooks/1163425044844773456/Oi0Zdu41Davm5B1QUF2twUOBR2yWEwvM8SKjo-AH4bWMz7qxl5m_4SpmrMUuMQ8helQ0
         msg: "Ansible Playbook Failed on {{ inventory_hostname }}"
         color: "danger"
-      when: play_hosts | length > 0
+      when: hostvars['localhost'].facts_gathering_failed | default(false)
