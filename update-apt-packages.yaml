@@ -1,24 +1,22 @@
 ---
 - hosts: all
-
+  gather_facts: true  # Enable gathering facts, even on failure
   become: true
   tasks:
-    - name: update apt packages
+    - name: Update apt packages
       apt:
         upgrade: yes
         update_cache: yes
-      register: apt_result
 
-    - name: Notify on failure
-      block:
-        - name: This block is only executed if there is an error
-          fail:
-            msg: "The playbook failed. Please check."
+    - name: Capture facts gathering result
+      meta: end_play
+      when: ansible_facts.failed
 
-      rescue:
-        - name: Send Discord notification on failure
-          slack:
-            token: https://discord.com/api/webhooks/1163425044844773456/Oi0Zdu41Davm5B1QUF2twUOBR2yWEwvM8SKjo-AH4bWMz7qxl5m_4SpmrMUuMQ8helQ0
-            msg: "Ansible Playbook Failed on {{ inventory_hostname }}"
-            color: "danger"
-          when: apt_result.failed
+- hosts: localhost  # Use localhost for sending the Discord notification
+  tasks:
+    - name: Send Discord notification
+      slack:
+        token: https://discord.com/api/webhooks/1163425044844773456/Oi0Zdu41Davm5B1QUF2twUOBR2yWEwvM8SKjo-AH4bWMz7qxl5m_4SpmrMUuMQ8helQ0
+        msg: "Ansible Playbook Failed on {{ inventory_hostname }}"
+        color: "danger"
+      when: play_hosts | length > 0
