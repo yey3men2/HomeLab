@@ -7,3 +7,18 @@
       apt:
         upgrade: yes
         update_cache: yes
+      register: apt_result
+
+    - name: Notify on failure
+      block:
+        - name: This block is only executed if there is an error
+          fail:
+            msg: "The playbook failed. Please check."
+
+      rescue:
+        - name: Send Discord notification on failure
+          slack:
+            token: https://discord.com/api/webhooks/1163425044844773456/Oi0Zdu41Davm5B1QUF2twUOBR2yWEwvM8SKjo-AH4bWMz7qxl5m_4SpmrMUuMQ8helQ0
+            msg: "Ansible Playbook Failed on {{ inventory_hostname }}"
+            color: "danger"
+          when: apt_result.failed
