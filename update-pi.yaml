@@ -1,16 +1,27 @@
 ---
-- hosts: all
+- name: Update Raspberry Pi OS
+  hosts: all
+  become: true
 
   tasks:
-    - ping: ~
-
-    - name: Update APT package manager repositories cache
-      become: true
+    - name: Update package lists
       apt:
         update_cache: yes
 
-    - name: Upgrade installed packages
-      become: true
+    - name: Upgrade packages
       apt:
-        upgrade: dist
-...
+        upgrade: yes
+
+    - name: Upgrade distribution packages
+      apt:
+        upgrade_dist: yes
+
+    - name: Clean up unnecessary packages
+      apt:
+        autoremove: yes
+
+    - name: Reboot if required
+      command: "reboot"
+      async: 0
+      poll: 0
+      ignore_errors: true
