@@ -1,6 +1,6 @@
 ---
 - name: Update Raspberry Pi OS
-  hosts: All
+  hosts: all
   become: true
 
   tasks:
