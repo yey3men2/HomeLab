@@ -1,14 +1,25 @@
 ---
 - name: Update Raspberry Pi OS
-  hosts: all
+  hosts: All
   become: true
 
   tasks:
     - name: Release apt lock
-      file:
-        path: /var/lib/apt/lists/lock
-        state: absent
-      become: true
+      block:
+        - name: Remove apt lock file
+          file:
+            path: /var/lib/apt/lists/lock
+            state: absent
+            force: yes
+          become: true
+        - name: Remove apt lock directory
+          file:
+            path: /var/lib/apt/lists
+            state: directory
+            recurse: yes
+            force: yes
+          become: true
+      ignore_errors: yes
 
     - name: Update package lists
       apt:
