@@ -4,6 +4,10 @@
   become: true
 
   tasks:
+    - name: Release apt lock
+      shell: rm -f /var/lib/apt/lists/lock
+      ignore_errors: yes
+
     - name: Update package lists
       apt:
         update_cache: yes
