@@ -1,0 +1,30 @@
+---
+version: "2.1"
+services:
+  adguardhome-sync:
+    image: quay.io/bakito/adguardhome-sync
+    container_name: adguardhome-sync
+    command: run
+    environment:
+      - ORIGIN_URL=http://192.168.XX.XX #change as necessary
+      - ORIGIN_USERNAME=$USERNAME #change as necessary
+      - ORIGIN_PASSWORD=$PASSWORD #change as necessary
+      - REPLICA_URL=http://192.168.XX.XX #change as necessary
+      - REPLICA_USERNAME=$USERNAME #change as necessary
+      - REPLICA_PASSWORD=$PASSWORD #change as necessary
+      #- REPLICA1_URL=http://192.168.1.4 #change as necessary
+      #- REPLICA1_USERNAME=username #change as necessary
+      #- REPLICA1_PASSWORD=password #change as necessary
+      - CRON=*/1 * * * * # run every 1 minute
+      - RUNONSTART=true
+    ports:
+      - 9876:8080 #change as necessary
+    restart: unless-stopped    
+    
+    
+################
+#
+# Original Source: 
+# https://github.com/bakito/adguardhome-sync
+#
+################
